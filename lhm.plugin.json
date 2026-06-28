@@ -1,53 +1,188 @@
 {
  "identifier": "foursecondfivefour-aether-linux-mcp-server",
  "name": "AETHER_02",
- "version": "1.0.0",
+ "version": "1.0.1",
  "description": "Full-spectrum Linux MCP server — 12 tools, 99.9% system management coverage including GUI automation, hardware control, security audit, package management. Separate repo from AETHER (Windows).",
  "author": "foursecondfivefour",
  "authorUrl": "https://github.com/foursecondfivefour",
  "homepage": "https://github.com/foursecondfivefour/aether-linux-mcp-server",
  "icon": "🐧",
  "category": "development",
- "tags": ["linux", "system-administration", "mcp-server", "rust", "security", "gui-automation", "devops", "kernel", "process-management"],
+ "tags": [
+  "linux",
+  "system-administration",
+  "mcp-server",
+  "rust",
+  "security",
+  "gui-automation",
+  "devops",
+  "kernel",
+  "process-management"
+ ],
  "tools": [
-  { "name": "process_control", "description": "Linux process management — list, kill, signal, create, priority, threads, CPU affinity, memory limits, file descriptors, environment, cgroups v2, namespaces, OOM, seccomp, ptrace, Docker/Podman containers, perf" },
-  { "name": "file_system", "description": "Linux filesystem operations — read/write/delete, stat, ACL, xattr, symlinks, chmod/chown, mount/umount/remount, disks, partitions, mdraid, LVM, swap, fsck, NFS, btrfs, ZFS, overlay" },
-  { "name": "package_manager", "description": "Universal package management — apt, dnf, pacman, zypper, flatpak, snap, AppImage, nix. Install, remove, upgrade, search, hold, repos, history, verify" },
-  { "name": "system_config", "description": "Linux system configuration — sysctl, kernel cmdline, modprobe, dracut, dconf, gsettings, limits.conf, hostname, timezone, locale, keyboard, /etc configs, udev rules, environment, os-release" },
-  { "name": "service_manager", "description": "Service management — systemd (start/stop/restart/enable/disable/mask/reload/isolate/timers/sockets/mounts/analyze), OpenRC (rc-service/rc-update), runit (sv), s6" },
-  { "name": "gui_automation", "description": "GUI automation — X11 (XTest/XInput2) + Wayland (ydotool/wlrctl), mouse/keyboard, window management, screenshots, clipboard, display (xrandr), audio (PulseAudio/PipeWire), brightness, night light, notifications, screensaver" },
-  { "name": "system_info", "description": "Linux system information — CPU, memory, disk, OS release, kernel, modules, uptime, load, GPU, PCI, USB, DMI/SMBIOS, ACPI, EDID, IOMMU, NUMA, IRQ, lm-sensors, devices, drivers, firmware" },
-  { "name": "network_manager", "description": "Linux network management — iproute2 (link/addr/route), nftables firewall, NetworkManager (DBus), WireGuard, bridges/bonds/VLANs, network namespaces, tc/qdisc, socket diag, WiFi, Bluetooth, DNS (systemd-resolved), proxy, hosts" },
-  { "name": "user_management", "description": "Linux user administration — /etc/passwd/group/shadow, useradd/userdel/usermod, groupadd/groupdel, sessions (loginctl), nsswitch.conf, PAM, polkit, sudoers, SSH authorized_keys, faillock, subuid/subgid" },
-  { "name": "security_audit", "description": "Linux security auditing — SELinux, AppArmor, auditd, ufw/firewalld, TPM2, Secure Boot, IMA/EVM, fapolicyd, kernel lockdown, LSMs, spectre/meltdown mitigations, ASLR/NX/RELRO, file integrity (AIDE), UEFI boot chain" },
-  { "name": "hardware_control", "description": "Linux hardware control — NVIDIA/AMD/Intel GPU, PCI rescan, USB authorization, ACPI, cpufreq governors, thermal zones/sensors, CPU microcode, IOMMU groups, IRQ affinity, HugePages, kdump" },
-  { "name": "system_automation", "description": "Linux system automation — journald query/follow/vacuum, systemd timers, cron/anacron, at jobs, tmpfiles.d, sysusers.d, binfmt_misc, modules-load.d, sysctl.d, boot analysis (systemd-analyze)" }
+  {
+   "name": "process_control",
+   "description": "Linux process management — list, kill, signal, create, priority, threads, CPU affinity, memory limits, file descriptors, environment, cgroups v2, namespaces, OOM, seccomp, ptrace, Docker/Podman containers, perf"
+  },
+  {
+   "name": "file_system",
+   "description": "Linux filesystem operations — read/write/delete, stat, ACL, xattr, symlinks, chmod/chown, mount/umount/remount, disks, partitions, mdraid, LVM, swap, fsck, NFS, btrfs, ZFS, overlay"
+  },
+  {
+   "name": "package_manager",
+   "description": "Universal package management — apt, dnf, pacman, zypper, flatpak, snap, AppImage, nix. Install, remove, upgrade, search, hold, repos, history, verify"
+  },
+  {
+   "name": "system_config",
+   "description": "Linux system configuration — sysctl, kernel cmdline, modprobe, dracut, dconf, gsettings, limits.conf, hostname, timezone, locale, keyboard, /etc configs, udev rules, environment, os-release"
+  },
+  {
+   "name": "service_manager",
+   "description": "Service management — systemd (start/stop/restart/enable/disable/mask/reload/isolate/timers/sockets/mounts/analyze), OpenRC (rc-service/rc-update), runit (sv), s6"
+  },
+  {
+   "name": "gui_automation",
+   "description": "GUI automation — X11 (XTest/XInput2) + Wayland (ydotool/wlrctl), mouse/keyboard, window management, screenshots, clipboard, display (xrandr), audio (PulseAudio/PipeWire), brightness, night light, notifications, screensaver"
+  },
+  {
+   "name": "system_info",
+   "description": "Linux system information — CPU, memory, disk, OS release, kernel, modules, uptime, load, GPU, PCI, USB, DMI/SMBIOS, ACPI, EDID, IOMMU, NUMA, IRQ, lm-sensors, devices, drivers, firmware"
+  },
+  {
+   "name": "network_manager",
+   "description": "Linux network management — iproute2 (link/addr/route), nftables firewall, NetworkManager (DBus), WireGuard, bridges/bonds/VLANs, network namespaces, tc/qdisc, socket diag, WiFi, Bluetooth, DNS (systemd-resolved), proxy, hosts"
+  },
+  {
+   "name": "user_management",
+   "description": "Linux user administration — /etc/passwd/group/shadow, useradd/userdel/usermod, groupadd/groupdel, sessions (loginctl), nsswitch.conf, PAM, polkit, sudoers, SSH authorized_keys, faillock, subuid/subgid"
+  },
+  {
+   "name": "security_audit",
+   "description": "Linux security auditing — SELinux, AppArmor, auditd, ufw/firewalld, TPM2, Secure Boot, IMA/EVM, fapolicyd, kernel lockdown, LSMs, spectre/meltdown mitigations, ASLR/NX/RELRO, file integrity (AIDE), UEFI boot chain"
+  },
+  {
+   "name": "hardware_control",
+   "description": "Linux hardware control — NVIDIA/AMD/Intel GPU, PCI rescan, USB authorization, ACPI, cpufreq governors, thermal zones/sensors, CPU microcode, IOMMU groups, IRQ affinity, HugePages, kdump"
+  },
+  {
+   "name": "system_automation",
+   "description": "Linux system automation — journald query/follow/vacuum, systemd timers, cron/anacron, at jobs, tmpfiles.d, sysusers.d, binfmt_misc, modules-load.d, sysctl.d, boot analysis (systemd-analyze)"
+  }
  ],
  "prompts": [
-  { "name": "system_health", "description": "Analyze CPU, memory, disk, OS, and process health. Check load, uptime, swap usage, disk space, and top processes with optional service status." },
-  { "name": "security_posture", "description": "Audit Linux security posture — SELinux/AppArmor status, firewall rules, kernel hardening, ASLR, Secure Boot, TPM, file integrity. Generate a risk-scored security report." },
-  { "name": "diagnostic_report", "description": "Generate a structured diagnostic report — journal errors, failing services, disk health, OOM events, network issues, and recent crashes. Include actionable remediation steps." }
+  {
+   "name": "system_health",
+   "description": "Analyze CPU, memory, disk, OS, and process health. Check load, uptime, swap usage, disk space, and top processes with optional service status."
+  },
+  {
+   "name": "security_posture",
+   "description": "Audit Linux security posture — SELinux/AppArmor status, firewall rules, kernel hardening, ASLR, Secure Boot, TPM, file integrity. Generate a risk-scored security report."
+  },
+  {
+   "name": "diagnostic_report",
+   "description": "Generate a structured diagnostic report — journal errors, failing services, disk health, OOM events, network issues, and recent crashes. Include actionable remediation steps."
+  }
  ],
  "resources": [
-  { "name": "cpu_info", "description": "Live CPU metrics — model, cores, frequency, governor, vulnerabilities, cache", "uri": "aether://system/cpu" },
-  { "name": "memory_info", "description": "Live memory metrics — total, used, available, buffer/cache, swap, hugepages", "uri": "aether://system/memory" },
-  { "name": "disk_info", "description": "Disk layout — lsblk output with partitions, filesystems, mount points", "uri": "aether://system/disk" },
-  { "name": "os_release", "description": "OS identification — distribution, version, kernel, architecture", "uri": "aether://system/os-release" },
-  { "name": "uptime_info", "description": "System uptime, load averages, and boot time", "uri": "aether://system/uptime" },
-  { "name": "kernel_info", "description": "Kernel version, modules loaded, tainted state", "uri": "aether://system/kernel" },
-  { "name": "gpu_info", "description": "GPU list from lspci — vendor, model, driver", "uri": "aether://system/gpu" },
-  { "name": "pci_devices", "description": "Full PCI bus enumeration with device details", "uri": "aether://system/pci" },
-  { "name": "usb_devices", "description": "USB device tree with vendor/product IDs", "uri": "aether://system/usb" },
-  { "name": "dmi_system", "description": "DMI/SMBIOS system information — manufacturer, product, serial", "uri": "aether://system/dmi" },
-  { "name": "thermal_zones", "description": "Thermal zone temperatures from /sys/class/thermal and sensors", "uri": "aether://system/thermal" },
-  { "name": "network_adapters", "description": "Network interfaces — IP addresses, MAC, speed, driver, statistics", "uri": "aether://system/network-adapters" },
-  { "name": "firewall_status", "description": "Firewall state — ufw/firewalld/nftables rules overview", "uri": "aether://system/firewall" },
-  { "name": "services_status", "description": "Systemd service status — active, enabled, failed, masked units", "uri": "aether://system/services" },
-  { "name": "users_groups", "description": "Local users and groups from /etc/passwd and /etc/group", "uri": "aether://system/users" },
-  { "name": "security_status", "description": "Security subsystem status — SELinux/AppArmor, auditd, Secure Boot, kernel lockdown", "uri": "aether://system/security" },
-  { "name": "feature_gates", "description": "Current feature gate configuration from .env", "uri": "aether://config/feature-gates" },
-  { "name": "environment", "description": "System environment variables", "uri": "aether://system/environment" },
-  { "name": "installed_packages", "description": "List of installed packages via detected package manager", "uri": "aether://system/installed-packages" },
-  { "name": "journal_recent", "description": "Recent journal entries since last boot", "uri": "aether://system/journal" }
+  {
+   "name": "cpu_info",
+   "description": "Live CPU metrics — model, cores, frequency, governor, vulnerabilities, cache",
+   "uri": "aether://system/cpu"
+  },
+  {
+   "name": "memory_info",
+   "description": "Live memory metrics — total, used, available, buffer/cache, swap, hugepages",
+   "uri": "aether://system/memory"
+  },
+  {
+   "name": "disk_info",
+   "description": "Disk layout — lsblk output with partitions, filesystems, mount points",
+   "uri": "aether://system/disk"
+  },
+  {
+   "name": "os_release",
+   "description": "OS identification — distribution, version, kernel, architecture",
+   "uri": "aether://system/os-release"
+  },
+  {
+   "name": "uptime_info",
+   "description": "System uptime, load averages, and boot time",
+   "uri": "aether://system/uptime"
+  },
+  {
+   "name": "kernel_info",
+   "description": "Kernel version, modules loaded, tainted state",
+   "uri": "aether://system/kernel"
+  },
+  {
+   "name": "gpu_info",
+   "description": "GPU list from lspci — vendor, model, driver",
+   "uri": "aether://system/gpu"
+  },
+  {
+   "name": "pci_devices",
+   "description": "Full PCI bus enumeration with device details",
+   "uri": "aether://system/pci"
+  },
+  {
+   "name": "usb_devices",
+   "description": "USB device tree with vendor/product IDs",
+   "uri": "aether://system/usb"
+  },
+  {
+   "name": "dmi_system",
+   "description": "DMI/SMBIOS system information — manufacturer, product, serial",
+   "uri": "aether://system/dmi"
+  },
+  {
+   "name": "thermal_zones",
+   "description": "Thermal zone temperatures from /sys/class/thermal and sensors",
+   "uri": "aether://system/thermal"
+  },
+  {
+   "name": "network_adapters",
+   "description": "Network interfaces — IP addresses, MAC, speed, driver, statistics",
+   "uri": "aether://system/network-adapters"
+  },
+  {
+   "name": "firewall_status",
+   "description": "Firewall state — ufw/firewalld/nftables rules overview",
+   "uri": "aether://system/firewall"
+  },
+  {
+   "name": "services_status",
+   "description": "Systemd service status — active, enabled, failed, masked units",
+   "uri": "aether://system/services"
+  },
+  {
+   "name": "users_groups",
+   "description": "Local users and groups from /etc/passwd and /etc/group",
+   "uri": "aether://system/users"
+  },
+  {
+   "name": "security_status",
+   "description": "Security subsystem status — SELinux/AppArmor, auditd, Secure Boot, kernel lockdown",
+   "uri": "aether://system/security"
+  },
+  {
+   "name": "feature_gates",
+   "description": "Current feature gate configuration from .env",
+   "uri": "aether://config/feature-gates"
+  },
+  {
+   "name": "environment",
+   "description": "System environment variables",
+   "uri": "aether://system/environment"
+  },
+  {
+   "name": "installed_packages",
+   "description": "List of installed packages via detected package manager",
+   "uri": "aether://system/installed-packages"
+  },
+  {
+   "name": "journal_recent",
+   "description": "Recent journal entries since last boot",
+   "uri": "aether://system/journal"
+  }
  ]
 }
