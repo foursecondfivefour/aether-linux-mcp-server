@@ -1,0 +1,9 @@
+target/
+*.log
+debug/
+.env
+*.core
+*.swp
+**/.git/**
+*.o
+*.so

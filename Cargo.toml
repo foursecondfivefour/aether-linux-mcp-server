@@ -1,0 +1,70 @@
+[package]
+name = "aether-linux-mcp-server"
+version = "1.0.0"
+edition = "2021"
+description = "AETHER_02 — Full-spectrum Linux MCP Server with 99.9% system management coverage"
+
+[dependencies]
+rmcp = "0.5"
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+schemars = "0.8"
+thiserror = "2"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+chrono = { version = "0.4", features = ["serde"] }
+dotenvy = "0.15"
+base64 = "0.22"
+anyhow = "1"
+nix = { version = "0.29", features = [
+    "signal",
+    "process",
+    "fs",
+    "mount",
+    "sched",
+    "user",
+    "ptrace",
+    "mman",
+    "time",
+    "ioctl",
+    "net",
+    "poll",
+    "event",
+    "uio",
+    "socket",
+    "term",
+    "resource",
+    "dir",
+    "acct",
+] }
+libc = "0.2"
+zbus = { version = "5", features = ["tokio"] }
+procfs = "0.16"
+xattr = "1"
+sha2 = "0.10"
+
+[target.'cfg(all())'.dependencies.x11rb]
+version = "0.13"
+features = ["allow-unsafe-code", "composite", "damage", "dri3", "glx", "present", "randr", "record", "render", "res", "screensaver", "shape", "shm", "sync", "xevie", "xf86dri", "xf86vidmode", "xfixes", "xinerama", "xinput", "xkb", "xprint", "xtest", "xv", "xvmc"]
+optional = true
+
+[dependencies.tss-esapi]
+version = "7"
+optional = true
+
+[features]
+default = ["x11"]
+x11 = ["x11rb"]
+tpm2 = ["tss-esapi"]
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = true
+debug = 0
+debug-assertions = false
+overflow-checks = false
+incremental = false

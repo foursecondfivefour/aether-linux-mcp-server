@@ -1,0 +1,13 @@
+/target/
+.env
+*.log
+debug/
+*.core
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+*.o
+*.so
+*.dylib

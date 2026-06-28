@@ -1,0 +1,45 @@
+{
+  "name": "@foursecondfivefour/aether-linux-mcp-server",
+  "version": "1.0.0",
+  "description": "AETHER_02 — Full-spectrum Linux MCP server: process, file, package, config, service, GUI, system, network, user, security, hardware, automation. 12 tools, 99.9% Linux management coverage.",
+  "keywords": [
+    "mcp",
+    "mcp-server",
+    "linux",
+    "system-administration",
+    "model-context-protocol"
+  ],
+  "homepage": "https://github.com/foursecondfivefour/aether-linux-mcp-server",
+  "bugs": "https://github.com/foursecondfivefour/aether-linux-mcp-server/issues",
+  "license": "MIT",
+  "author": "foursecondfivefour",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/foursecondfivefour/aether-linux-mcp-server.git"
+  },
+  "bin": {
+    "aether-mcp-server": "bin/aether-mcp-server"
+  },
+  "files": [
+    "install.sh",
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "postinstall": "bash install.sh"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "os": [
+    "linux"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}
