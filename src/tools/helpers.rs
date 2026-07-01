@@ -167,7 +167,31 @@ pub fn preview_command(cmd: &str, args: &[&str]) -> String {
 
 #[must_use]
 pub fn preview_action(risk: RiskLevel, detail: impl AsRef<str>) -> String {
-    format!("DRY-RUN [{}]: {}", risk.as_str(), detail.as_ref())
+    let message = format!("DRY-RUN [{}]: {}", risk.as_str(), detail.as_ref());
+    serde_json::json!({
+        "ok": true,
+        "type": "action_preview",
+        "dry_run": true,
+        "risk": risk.as_str(),
+        "message": message,
+    })
+    .to_string()
+}
+
+#[must_use]
+pub fn tool_response(tool: &str, action: &str, raw: String) -> String {
+    let parsed = serde_json::from_str::<serde_json::Value>(&raw).ok();
+    let nested_ok = parsed.as_ref().and_then(|v| v.get("ok")).and_then(|v| v.as_bool());
+    let ok = nested_ok.unwrap_or_else(|| !raw.starts_with("Error:"));
+    let result = parsed.unwrap_or(serde_json::Value::String(raw));
+
+    serde_json::json!({
+        "ok": ok,
+        "tool": tool,
+        "action": action,
+        "result": result,
+    })
+    .to_string()
 }
 
 pub fn require_force_or_dry_run(params: &serde_json::Value, ctx: &ErrorContext) -> Result<(), AetherError> {
@@ -179,26 +203,88 @@ pub fn require_force_or_dry_run(params: &serde_json::Value, ctx: &ErrorContext) 
 }
 
 pub fn cmd(cmd: &str, args: &[&str]) -> String {
-    if !is_allowed_command(cmd) {
-        return format!("Command not allowed by AETHER allowlist: {cmd}");
-    }
-
-    if std::env::var("AETHER_MOCK_COMMANDS").ok().as_deref() == Some("1") {
-        return format!("MOCK: {}", command_line(cmd, args));
-    }
-
-    Command::new(cmd)
-        .args(args)
-        .output()
-        .map(|o| format!("{}{}", String::from_utf8_lossy(&o.stdout), String::from_utf8_lossy(&o.stderr)))
-        .unwrap_or_else(|_| format!("'{}' not available", cmd))
+    command_response(cmd, args, false)
 }
 
 pub fn cmd_params(params: &serde_json::Value, cmd: &str, args: &[&str]) -> String {
-    if dry_run(params) {
-        preview_command(cmd, args)
-    } else {
-        self::cmd(cmd, args)
+    command_response(cmd, args, dry_run(params))
+}
+
+fn command_response(cmd: &str, args: &[&str], is_dry_run: bool) -> String {
+    let args_vec = args.iter().map(|s| (*s).to_string()).collect::<Vec<_>>();
+    let command_line = command_line(cmd, args);
+
+    if !is_allowed_command(cmd) {
+        return serde_json::json!({
+            "ok": false,
+            "type": "command",
+            "error": "not_allowed",
+            "message": format!("Command not allowed by AETHER allowlist: {cmd}"),
+            "command": cmd,
+            "args": args_vec,
+            "command_line": command_line,
+        })
+        .to_string();
+    }
+
+    if is_dry_run {
+        return serde_json::json!({
+            "ok": true,
+            "type": "command",
+            "dry_run": true,
+            "mock": false,
+            "command": cmd,
+            "args": args_vec,
+            "command_line": command_line,
+            "stdout": preview_command(cmd, args),
+            "stderr": "",
+            "exit_code": null,
+        })
+        .to_string();
+    }
+
+    if std::env::var("AETHER_MOCK_COMMANDS").ok().as_deref() == Some("1") {
+        return serde_json::json!({
+            "ok": true,
+            "type": "command",
+            "dry_run": false,
+            "mock": true,
+            "command": cmd,
+            "args": args_vec,
+            "command_line": command_line,
+            "stdout": format!("MOCK: {command_line}"),
+            "stderr": "",
+            "exit_code": 0,
+        })
+        .to_string();
+    }
+
+    match Command::new(cmd).args(args).output() {
+        Ok(o) => serde_json::json!({
+            "ok": o.status.success(),
+            "type": "command",
+            "dry_run": false,
+            "mock": false,
+            "command": cmd,
+            "args": args_vec,
+            "command_line": command_line,
+            "stdout": String::from_utf8_lossy(&o.stdout).to_string(),
+            "stderr": String::from_utf8_lossy(&o.stderr).to_string(),
+            "exit_code": o.status.code(),
+        })
+        .to_string(),
+        Err(e) => serde_json::json!({
+            "ok": false,
+            "type": "command",
+            "dry_run": false,
+            "mock": false,
+            "command": cmd,
+            "args": args_vec,
+            "command_line": command_line,
+            "error": "spawn_failed",
+            "message": e.to_string(),
+        })
+        .to_string(),
     }
 }
 

@@ -155,12 +155,19 @@ def main() -> int:
             })
             msg = read_until_id(selector, proc, i)
             text = text_from_result(msg)
+            try:
+                envelope = json.loads(text)
+                structured_bad = envelope.get("tool") != tool or envelope.get("action") != action or "ok" not in envelope
+            except json.JSONDecodeError:
+                envelope = {}
+                structured_bad = True
+
             if expected == "ok":
-                bad = "panic" in text.lower() or "not implemented" in text.lower()
+                bad = structured_bad or "panic" in text.lower() or "not implemented" in text.lower()
             else:
-                bad = expected not in text
+                bad = structured_bad or expected not in text
             if bad:
-                failures.append(f"{tool}.{action}: expected {expected!r}, got {text[:300]!r}")
+                failures.append(f"{tool}.{action}: expected {expected!r}, structured_bad={structured_bad}, got {text[:300]!r}")
 
         if failures:
             print("MOCK_MATRIX_FAILED", file=sys.stderr)

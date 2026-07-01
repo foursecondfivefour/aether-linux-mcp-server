@@ -37,7 +37,7 @@ fn safe_command_actions_are_mocked_not_executed() {
         ];
 
         for output in cases {
-            assert!(output.starts_with("MOCK:"), "expected mocked command output, got: {output}");
+            assert!(output.contains("MOCK:"), "expected mocked command output, got: {output}");
         }
     });
 }

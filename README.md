@@ -107,6 +107,25 @@ Detailed map: [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md).
 
 ---
 
+## Structured tool output
+
+Tool calls now return a JSON envelope as text content:
+
+```json
+{
+  "ok": true,
+  "tool": "service_manager",
+  "action": "status",
+  "result": {
+    "type": "command",
+    "command_line": "systemctl status ssh --no-pager",
+    "stdout": "...",
+    "stderr": "...",
+    "exit_code": 0
+  }
+}
+```
+
 ## Development
 
 ```bash

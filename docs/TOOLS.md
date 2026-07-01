@@ -13,6 +13,32 @@ AETHER_02 exposes 12 MCP tools. Each tool takes this parameter shape:
 
 For dangerous command-backed actions you can pass `"dry_run": true` inside `params` to preview the command/action instead of mutating the host.
 
+## Response format
+
+Every tool call returns a structured JSON envelope as MCP text content:
+
+```json
+{
+  "ok": true,
+  "tool": "service_manager",
+  "action": "status",
+  "result": {
+    "ok": true,
+    "type": "command",
+    "dry_run": false,
+    "mock": false,
+    "command": "systemctl",
+    "args": ["status", "ssh", "--no-pager"],
+    "command_line": "systemctl status ssh --no-pager",
+    "stdout": "...",
+    "stderr": "...",
+    "exit_code": 0
+  }
+}
+```
+
+For direct filesystem/sysfs operations, `result` may be a string or an action preview object. For command-backed operations, `result.type` is `command`.
+
 | # | Tool | Actions |
 |---|------|---------|
 | 1 | `process_control` | list, tree, kill, signal, create, set_priority, set_nice, query_info, threads, set_affinity, memory_info, memory_limits, fd_list, fd_info, limits, environ, suspend, resume, cgroup_list, cgroup_info, cgroup_create, cgroup_delete, cgroup_set_limit, cgroup_move, namespace_list, namespace_enter*, oom_score, oom_kill, seccomp_info, ptrace_attach*, ptrace_detach*, container_list, container_info, container_start, container_stop, container_logs, container_exec, perf_top, perf_stat |
