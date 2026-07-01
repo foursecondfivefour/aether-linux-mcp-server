@@ -184,11 +184,19 @@ pub fn tool_response(tool: &str, action: &str, raw: String) -> String {
     let nested_ok = parsed.as_ref().and_then(|v| v.get("ok")).and_then(|v| v.as_bool());
     let ok = nested_ok.unwrap_or_else(|| !raw.starts_with("Error:"));
     let result = parsed.unwrap_or(serde_json::Value::String(raw));
+    let spec = crate::actions::get(tool, action);
+    let spec_json = spec.map(|s| s.to_json());
 
     serde_json::json!({
         "ok": ok,
         "tool": tool,
         "action": action,
+        "risk": spec.map(|s| s.risk).unwrap_or("unknown"),
+        "requires_force": spec.map(|s| s.requires_force).unwrap_or(false),
+        "supports_dry_run": spec.map(|s| s.supports_dry_run).unwrap_or(false),
+        "feature_gate": spec.and_then(|s| s.feature_gate),
+        "required_params": spec.map(|s| s.required_params).unwrap_or(&[]),
+        "spec": spec_json,
         "result": result,
     })
     .to_string()

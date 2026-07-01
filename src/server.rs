@@ -178,6 +178,7 @@ const RESOURCES: &[(&str, &str, &str)] = &[
         "Security subsystem status — SELinux/AppArmor, auditd, Secure Boot, kernel lockdown",
     ),
     ("aether://config/feature-gates", "feature_gates", "Current feature gate configuration from .env"),
+    ("aether://config/action-registry", "action_registry", "Structured spec for all registered tool actions"),
     ("aether://system/environment", "environment", "System environment variables"),
     (
         "aether://system/installed-packages",
@@ -235,6 +236,7 @@ fn resolve_resource(p: &str) -> String {
             )
         }
         "feature-gates" => "See AETHER_02 .env — all gates default to 0 (disabled)".to_string(),
+        "action-registry" => crate::actions::registry_json().to_string(),
         "environment" => read_cmd("env", &[]),
         "installed-packages" => read_cmd("dpkg", &["-l"]),
         "journal" => read_cmd("journalctl", &["-n", "50", "--no-pager"]),
@@ -297,7 +299,7 @@ impl ServerHandler for AetherServer {
 
 12 tools covering 99.9% of system administration including GUI automation.
 3 prompts for system health, security audit, and diagnostics.
-20 resources for real-time system information.
+21 resources for real-time system information and action metadata.
 
 Dangerous operations require `force: true` parameter.
 Feature gates in `.env` control critically dangerous capabilities.
