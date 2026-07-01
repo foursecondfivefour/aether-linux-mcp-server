@@ -1,0 +1,84 @@
+# Windsurf Rules — AETHER_02
+
+## Project Identity
+
+AETHER_02 — Linux MCP server, 12 tools, 99.9% system management.
+- **Language:** Rust (edition 2021, nightly toolchain for hardening flags)
+- **Target:** Linux x86-64/arm64
+- **Transport:** stdio — stdout is JSON-RPC exclusively
+
+## Build
+
+```bash
+cargo check
+cargo build
+cargo test
+cargo clippy -- -D warnings
+cargo fmt --check
+```
+
+## Architecture
+
+```
+src/
+├── main.rs      — tokio::main, dotenvy, tracing→stderr, serve((stdin,stdout))
+├── server.rs    — AetherServer, tool_router, tool_handler, ActionParams
+├── config.rs    — FeatureGates from .env
+├── error.rs     — AetherError + POSIX/nix error helpers
+├── audit.rs     — log_success, log_failure, log_forced, log_security
+└── tools/
+    ├── process.rs     — 1. process_control
+    ├── filesystem.rs  — 2. file_system
+    ├── packages.rs    — 3. package_manager
+    ├── sysconfig.rs   — 4. system_config
+    ├── service.rs     — 5. service_manager
+    ├── gui.rs         — 6. gui_automation
+    ├── sysinfo.rs     — 7. system_info
+    ├── network.rs     — 8. network_manager
+    ├── user.rs        — 9. user_management
+    ├── security.rs    — 10. security_audit
+    ├── hardware.rs    — 11. hardware_control
+    └── automation.rs  — 12. system_automation
+```
+
+## Key Rules
+
+### NEVER
+- Print to stdout (MCP JSON-RPC channel)
+- Use `bash -c`, `sh -c`, `system()`, or interpolated shell commands for tool operations
+- Modify `mcp.json` or `.env` without explicit user request
+- Skip `// SAFETY:` comments on unsafe blocks
+- Enable destructive feature gates by default
+
+### ALWAYS
+- Validate all tool parameters before syscalls or CLI invocations
+- Check `force: true` for destructive operations
+- Check feature gates for privileged kernel/system operations
+- Pass CLI args as `Command::new(...).args([...])`, never shell strings
+- Canonicalize file paths before filesystem operations
+- Audit-log every tool invocation to stderr
+- Use `Result<T, AetherError>` for tool internals
+
+## Adding Actions
+
+```rust
+"new_action" => {
+    let ctx = ErrorContext::new("tool_name", "new_action");
+    let p = get_string_param(params, "required_param", &ctx)?;
+
+    if !require_force(params) {
+        return Err(AetherError::force_required(ctx));
+    }
+
+    audit::log_success("tool_name", "new_action", &format!("param={p}"));
+    Ok(serde_json::json!({ "ok": true }).to_string())
+}
+```
+
+## Feature Gates
+
+```rust
+server.gates.check(ctx, server.gates.module_load, "AETHER_MODULE_LOAD")?;
+```
+
+Eight gates, all off by default: `KEXEC_LOAD`, `MODULE_LOAD`, `BPF_LOAD`, `PTRACE_ATTACH`, `NAMESPACE_CREATE`, `OFFLINE_MOUNT`, `PARTITION_EDIT`, `TOKEN_MANIPULATION`.

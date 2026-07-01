@@ -1,6 +1,15 @@
 # AETHER_02 — Full-Spectrum Linux MCP Server
 
-Rust | MIT | MCP stdio
+[![Rust](https://img.shields.io/badge/rust-1.85+-orange.svg)](https://www.rust-lang.org)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![npm](https://img.shields.io/npm/v/%40foursecondfivefour%2Faether-linux-mcp-server?color=red)](https://www.npmjs.com/package/@foursecondfivefour/aether-linux-mcp-server)
+
+[![Add AETHER_02 MCP server to Cursor](https://cursor.com/deeplink/mcp-install-dark.png)](cursor://anysphere.cursor-deeplink/mcp/install?name=aether-02&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBmb3Vyc2Vjb25kZml2ZWZvdXIvYWV0aGVyLWxpbnV4LW1jcC1zZXJ2ZXIiXSwiZW52Ijp7IlJVU1RfTE9HIjoiaW5mbyJ9fQ==)
+[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-007ACC?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=aether-02&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40foursecondfivefour%2Faether-linux-mcp-server%22%5D%2C%22env%22%3A%7B%22RUST_LOG%22%3A%22info%22%7D%7D)
+[![Install in VS Code Insiders](https://img.shields.io/badge/Install_in-VS_Code_Insiders-24BFA5?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=aether-02&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40foursecondfivefour%2Faether-linux-mcp-server%22%5D%2C%22env%22%3A%7B%22RUST_LOG%22%3A%22info%22%7D%7D&quality=insiders)
+
+[![npm install](https://img.shields.io/badge/npm%20install-g%20aether--linux--mcp--server-CB3837?logo=npm&style=for-the-badge)](https://www.npmjs.com/package/@foursecondfivefour/aether-linux-mcp-server)
+[![Shell install](https://img.shields.io/badge/Shell-curl%20%7C%20bash-4EAA25?logo=gnubash&logoColor=white&style=for-the-badge)](https://raw.githubusercontent.com/foursecondfivefour/aether-linux-mcp-server/main/install.sh)
 
 **12 tools. 99.9% Linux coverage. Zero compromises.**
 
@@ -33,7 +42,17 @@ AETHER_02 is an MCP (Model Context Protocol) server written in Rust that gives A
 
 ## Installation
 
-### Method 1: One-click shell install
+AETHER_02 provides multiple installation methods — pick the one that works best for you.
+
+### Method 1: npm global install (easiest)
+
+```bash
+npm install -g @foursecondfivefour/aether-linux-mcp-server
+```
+
+The postinstall script downloads the latest Linux binary from GitHub Releases into the package `bin/` directory, so `aether-mcp-server` is available on your PATH.
+
+### Method 2: One-click shell install
 
 ```bash
 curl -sSL https://raw.githubusercontent.com/foursecondfivefour/aether-linux-mcp-server/main/install.sh | bash
@@ -44,7 +63,23 @@ The script:
 2. Creates `.env` with safe defaults
 3. Registers in Cursor, Claude Desktop, Windsurf, VS Code
 
-### Method 2: Build from source
+### Method 3: One-click editor integration
+
+Click the badge for your editor:
+
+| Editor | Install |
+|--------|---------|
+| **Cursor** | [![Add AETHER_02 MCP server to Cursor](https://cursor.com/deeplink/mcp-install-dark.png)](cursor://anysphere.cursor-deeplink/mcp/install?name=aether-02&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBmb3Vyc2Vjb25kZml2ZWZvdXIvYWV0aGVyLWxpbnV4LW1jcC1zZXJ2ZXIiXSwiZW52Ijp7IlJVU1RfTE9HIjoiaW5mbyJ9fQ==) |
+| **VS Code** | [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-007ACC?logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=aether-02&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40foursecondfivefour%2Faether-linux-mcp-server%22%5D%2C%22env%22%3A%7B%22RUST_LOG%22%3A%22info%22%7D%7D) |
+| **VS Code Insiders** | [![Install in VS Code Insiders](https://img.shields.io/badge/Install_in-VS_Code_Insiders-24BFA5?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=aether-02&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40foursecondfivefour%2Faether-linux-mcp-server%22%5D%2C%22env%22%3A%7B%22RUST_LOG%22%3A%22info%22%7D%7D&quality=insiders) |
+
+If your browser/GitHub client does not open the Cursor deeplink, copy this link into the address bar:
+
+```text
+cursor://anysphere.cursor-deeplink/mcp/install?name=aether-02&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBmb3Vyc2Vjb25kZml2ZWZvdXIvYWV0aGVyLWxpbnV4LW1jcC1zZXJ2ZXIiXSwiZW52Ijp7IlJVU1RfTE9HIjoiaW5mbyJ9fQ==
+```
+
+### Method 4: Build from source
 
 ```bash
 git clone https://github.com/foursecondfivefour/aether-linux-mcp-server
@@ -54,7 +89,7 @@ cargo build --release
 ./install.sh target/release/aether-mcp-server
 ```
 
-### Manual configuration
+### Manual configuration (without install script)
 
 **Cursor** — `~/.cursor/mcp.json`:
 ```json
@@ -67,6 +102,8 @@ cargo build --release
   }
 }
 ```
+
+For VS Code/Claude Desktop/Windsurf, add the same `aether-02` server entry to the client's MCP configuration file.
 
 ---
 
@@ -112,26 +149,36 @@ AETHER_02 follows the same security model as AETHER_01:
 ## Project Structure
 
 ```
-src/
-├── main.rs              # tokio::main, stdio transport
-├── lib.rs               # Module declarations
-├── server.rs            # AetherServer + 12 tool router
-├── config.rs            # FeatureGates from .env
-├── error.rs             # AetherError + POSIX errno mapping
-├── audit.rs             # Structured audit logging
-└── tools/
-    ├── process.rs       # Tool 1 — process_control
-    ├── filesystem.rs    # Tool 2 — file_system
-    ├── packages.rs      # Tool 3 — package_manager
-    ├── sysconfig.rs     # Tool 4 — system_config
-    ├── service.rs       # Tool 5 — service_manager
-    ├── gui.rs           # Tool 6 — gui_automation
-    ├── sysinfo.rs       # Tool 7 — system_info
-    ├── network.rs       # Tool 8 — network_manager
-    ├── user.rs          # Tool 9 — user_management
-    ├── security.rs      # Tool 10 — security_audit
-    ├── hardware.rs      # Tool 11 — hardware_control
-    └── automation.rs    # Tool 12 — system_automation
+.
+├── .agents/skills/aether-linux-mcp/SKILL.md  # Agent skill metadata
+├── .cursor/rules/aether-mcp.mdc              # Cursor project rules
+├── .github/                                  # Issues, PR template, Copilot instructions
+├── src/
+│   ├── main.rs              # tokio::main, stdio transport
+│   ├── lib.rs               # Module declarations
+│   ├── server.rs            # AetherServer + 12 tool router
+│   ├── config.rs            # FeatureGates from .env
+│   ├── error.rs             # AetherError + POSIX errno mapping
+│   ├── audit.rs             # Structured audit logging
+│   └── tools/
+│       ├── process.rs       # Tool 1 — process_control
+│       ├── filesystem.rs    # Tool 2 — file_system
+│       ├── packages.rs      # Tool 3 — package_manager
+│       ├── sysconfig.rs     # Tool 4 — system_config
+│       ├── service.rs       # Tool 5 — service_manager
+│       ├── gui.rs           # Tool 6 — gui_automation
+│       ├── sysinfo.rs       # Tool 7 — system_info
+│       ├── network.rs       # Tool 8 — network_manager
+│       ├── user.rs          # Tool 9 — user_management
+│       ├── security.rs      # Tool 10 — security_audit
+│       ├── hardware.rs      # Tool 11 — hardware_control
+│       └── automation.rs    # Tool 12 — system_automation
+├── tests/                   # Config/error/tool-dispatch smoke tests
+├── install.js               # npm postinstall binary downloader
+├── install.sh               # Linux one-click installer and MCP registration
+├── package.json             # npm package metadata
+├── rustfmt.toml             # Formatter settings
+└── clippy.toml              # Lint settings
 ```
 
 ---

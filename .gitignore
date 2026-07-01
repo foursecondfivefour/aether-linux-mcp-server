@@ -11,3 +11,5 @@ debug/
 *.o
 *.so
 *.dylib
+
+.cursorignore.index

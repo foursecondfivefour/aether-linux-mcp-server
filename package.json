@@ -1,6 +1,6 @@
 {
   "name": "@foursecondfivefour/aether-linux-mcp-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "AETHER_02 — Full-spectrum Linux MCP server: process, file, package, config, service, GUI, system, network, user, security, hardware, automation. 12 tools, 99.9% Linux management coverage.",
   "keywords": [
     "mcp",
@@ -21,13 +21,14 @@
     "aether-mcp-server": "bin/aether-mcp-server"
   },
   "files": [
+    "install.js",
     "install.sh",
     "bin/",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
-    "postinstall": "bash install.sh"
+    "postinstall": "node install.js"
   },
   "engines": {
     "node": ">=18"

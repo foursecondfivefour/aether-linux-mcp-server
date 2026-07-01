@@ -1,3 +1,8 @@
+---
+description:
+alwaysApply: true
+---
+
 # AGENTS.md — AETHER_02 AI Agent Instructions
 
 ## Project Identity

@@ -1,0 +1,31 @@
+---
+description: AETHER_02 Linux MCP server development rules
+alwaysApply: true
+---
+
+# AETHER_02 Cursor Rules
+
+AETHER_02 is a Rust MCP server for Linux administration over stdio. Keep stdout reserved for MCP JSON-RPC. All logs, diagnostics, and audit messages must go to stderr.
+
+## Safety
+
+- Do not use shell interpolation (`bash -c`, `sh -c`, `system()`) for tool actions.
+- Use direct syscalls via `nix`/`libc` or `std::process::Command` with explicit argv.
+- Require `force: true` for destructive changes.
+- Require `.env` feature gates for kernel, mount, partition, ptrace, BPF, namespace, or token/capability operations.
+- Canonicalize paths and validate parameters at the tool boundary.
+
+## Build Checks
+
+Run before submitting changes:
+
+```bash
+cargo fmt --check
+cargo clippy -- -D warnings
+cargo test
+cargo build --release
+```
+
+## Tool Map
+
+`process_control`, `file_system`, `package_manager`, `system_config`, `service_manager`, `gui_automation`, `system_info`, `network_manager`, `user_management`, `security_audit`, `hardware_control`, `system_automation`.
