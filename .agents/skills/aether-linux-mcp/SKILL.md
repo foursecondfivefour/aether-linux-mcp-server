@@ -96,14 +96,14 @@ Same philosophy, different OS.
 ### Installation
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/foursecondfivefour/aether-linux-mcp-server/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/foursecondfivefour/aether-linux-mcp-server/main/scripts/install/install.sh | bash
 ```
 
 Or build from source:
 ```bash
 git clone https://github.com/foursecondfivefour/aether-linux-mcp-server
 cd aether-linux-mcp-server
-cp .env.example .env
+cp config/env/.env.example .env
 cargo build --release
 ```
 

@@ -1,11 +1,13 @@
 use crate::audit;
 use crate::config::FeatureGates;
-use crate::error::{self, AetherError, ErrorContext, require_force};
+use crate::error::{self, require_force, AetherError, ErrorContext};
 use std::fs;
 use std::process::Command;
 
 fn run(cmd: &str, args: &[&str]) -> String {
-    Command::new(cmd).args(args).output()
+    Command::new(cmd)
+        .args(args)
+        .output()
         .map(|o| format!("{}{}", String::from_utf8_lossy(&o.stdout), String::from_utf8_lossy(&o.stderr)))
         .unwrap_or_else(|_| format!("'{}' not available", cmd))
 }
@@ -15,7 +17,11 @@ fn ps(params: &serde_json::Value, key: &str, ctx: &ErrorContext) -> String {
 }
 
 fn force_check(params: &serde_json::Value, ctx: &ErrorContext) -> Result<(), AetherError> {
-    if !require_force(params) { Err(AetherError::ForceRequired { ctx: ctx.clone() }) } else { Ok(()) }
+    if !require_force(params) {
+        Err(AetherError::ForceRequired { ctx: ctx.clone() })
+    } else {
+        Ok(())
+    }
 }
 
 pub fn handle(_gates: &FeatureGates, action: &str, params: serde_json::Value) -> String {
@@ -25,8 +31,11 @@ pub fn handle(_gates: &FeatureGates, action: &str, params: serde_json::Value) ->
         "gpu_amdgpu_info" => Ok(run("rocm-smi", &[])),
         "usb_devices" => Ok(run("lsusb", &["-t"])),
         "acpi_info" => Ok(run("acpi", &["-V"])),
-        "cpufreq_governor_get" => Ok(fs::read_to_string("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor").unwrap_or_default()),
-        "cpufreq_governor_set" => force_check(&params, &ctx).map(|_| run("cpupower", &["frequency-set", "-g", &ps(&params, "governor", &ctx)])),
+        "cpufreq_governor_get" => {
+            Ok(fs::read_to_string("/sys/devices/system/cpu/cpu0/cpufreq/scaling_governor").unwrap_or_default())
+        }
+        "cpufreq_governor_set" => force_check(&params, &ctx)
+            .map(|_| run("cpupower", &["frequency-set", "-g", &ps(&params, "governor", &ctx)])),
         "thermal_zones" => Ok(run("sensors", &[])),
         "thermal_temperature" => Ok(run("sensors", &[])),
         "iommu_groups" => Ok(run("ls", &["/sys/kernel/iommu_groups"])),

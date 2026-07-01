@@ -8,7 +8,7 @@ use crate::error::{AetherError, ErrorContext};
 
 /// Central feature gate configuration loaded from environment variables.
 /// Each gate controls a dangerous or sensitive system operation.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct FeatureGates {
     /// Load new kernel via kexec
     pub kexec_load: bool,
@@ -48,31 +48,11 @@ impl FeatureGates {
     }
 
     /// Verify that a specific gate is enabled, returning an `AetherError::FeatureDisabled` if not.
-    pub fn check(
-        &self,
-        ctx: ErrorContext,
-        enabled: bool,
-        gate_name: &str,
-    ) -> Result<(), AetherError> {
+    pub fn check(&self, ctx: ErrorContext, enabled: bool, gate_name: &str) -> Result<(), AetherError> {
         if !enabled {
             return Err(AetherError::feature_disabled(ctx, gate_name));
         }
         Ok(())
-    }
-}
-
-impl Default for FeatureGates {
-    fn default() -> Self {
-        Self {
-            kexec_load: false,
-            module_load: false,
-            bpf_load: false,
-            ptrace_attach: false,
-            namespace_create: false,
-            offline_mount: false,
-            partition_edit: false,
-            token_manipulation: false,
-        }
     }
 }
 

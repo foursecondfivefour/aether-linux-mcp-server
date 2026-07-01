@@ -1,11 +1,13 @@
 use crate::audit;
 use crate::config::FeatureGates;
-use crate::error::{self, AetherError, ErrorContext, require_force};
+use crate::error::{self, require_force, AetherError, ErrorContext};
 use std::fs;
 use std::process::Command;
 
 fn run(cmd: &str, args: &[&str]) -> String {
-    Command::new(cmd).args(args).output()
+    Command::new(cmd)
+        .args(args)
+        .output()
         .map(|o| format!("{}{}", String::from_utf8_lossy(&o.stdout), String::from_utf8_lossy(&o.stderr)))
         .unwrap_or_else(|_| format!("'{}' not available", cmd))
 }
@@ -15,7 +17,11 @@ fn ps(params: &serde_json::Value, key: &str, ctx: &ErrorContext) -> String {
 }
 
 fn force_check(params: &serde_json::Value, ctx: &ErrorContext) -> Result<(), AetherError> {
-    if !require_force(params) { Err(AetherError::ForceRequired { ctx: ctx.clone() }) } else { Ok(()) }
+    if !require_force(params) {
+        Err(AetherError::ForceRequired { ctx: ctx.clone() })
+    } else {
+        Ok(())
+    }
 }
 
 pub fn handle(gates: &FeatureGates, action: &str, params: serde_json::Value) -> String {
@@ -23,8 +29,12 @@ pub fn handle(gates: &FeatureGates, action: &str, params: serde_json::Value) -> 
     let result = match action {
         "users_list" => Ok(fs::read_to_string("/etc/passwd").unwrap_or_default()),
         "user_info" => Ok(run("getent", &["passwd", &ps(&params, "username", &ctx)])),
-        "user_create" => force_check(&params, &ctx).and_then(|_| gates.check(ctx.clone(), gates.token_manipulation, "AETHER_TOKEN_MANIPULATION")).map(|_| run("useradd", &["-m", &ps(&params, "username", &ctx)])),
-        "user_delete" => force_check(&params, &ctx).and_then(|_| gates.check(ctx.clone(), gates.token_manipulation, "AETHER_TOKEN_MANIPULATION")).map(|_| run("userdel", &[&ps(&params, "username", &ctx)])),
+        "user_create" => force_check(&params, &ctx)
+            .and_then(|_| gates.check(ctx.clone(), gates.token_manipulation, "AETHER_TOKEN_MANIPULATION"))
+            .map(|_| run("useradd", &["-m", &ps(&params, "username", &ctx)])),
+        "user_delete" => force_check(&params, &ctx)
+            .and_then(|_| gates.check(ctx.clone(), gates.token_manipulation, "AETHER_TOKEN_MANIPULATION"))
+            .map(|_| run("userdel", &[&ps(&params, "username", &ctx)])),
         "user_lock" => force_check(&params, &ctx).map(|_| run("passwd", &["-l", &ps(&params, "username", &ctx)])),
         "user_unlock" => force_check(&params, &ctx).map(|_| run("passwd", &["-u", &ps(&params, "username", &ctx)])),
         "groups_list" => Ok(fs::read_to_string("/etc/group").unwrap_or_default()),

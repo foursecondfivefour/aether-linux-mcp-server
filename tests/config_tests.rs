@@ -18,11 +18,7 @@ fn default_all_gates_disabled() {
 
 #[test]
 fn clone_preserves_gate_values() {
-    let gates = FeatureGates {
-        module_load: true,
-        ptrace_attach: true,
-        ..FeatureGates::default()
-    };
+    let gates = FeatureGates { module_load: true, ptrace_attach: true, ..FeatureGates::default() };
     let cloned = gates.clone();
     assert!(cloned.module_load);
     assert!(cloned.ptrace_attach);
@@ -31,10 +27,7 @@ fn clone_preserves_gate_values() {
 
 #[test]
 fn enabled_gate_check_returns_ok() {
-    let gates = FeatureGates {
-        partition_edit: true,
-        ..FeatureGates::default()
-    };
+    let gates = FeatureGates { partition_edit: true, ..FeatureGates::default() };
     let ctx = ErrorContext::new("file_system", "part_create");
     assert!(gates.check(ctx, gates.partition_edit, "AETHER_PARTITION_EDIT").is_ok());
 }
@@ -43,9 +36,7 @@ fn enabled_gate_check_returns_ok() {
 fn disabled_gate_check_returns_actionable_error() {
     let gates = FeatureGates::default();
     let ctx = ErrorContext::new("process_control", "ptrace_attach");
-    let err = gates
-        .check(ctx, gates.ptrace_attach, "AETHER_PTRACE_ATTACH")
-        .unwrap_err();
+    let err = gates.check(ctx, gates.ptrace_attach, "AETHER_PTRACE_ATTACH").unwrap_err();
     let msg = format!("{err}");
     assert!(msg.contains("Feature disabled"));
     assert!(msg.contains("AETHER_PTRACE_ATTACH"));

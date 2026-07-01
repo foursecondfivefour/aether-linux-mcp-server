@@ -8,6 +8,8 @@
 
 ## Threat Model
 
+For the full design notes, see [docs/SECURITY_MODEL.md](docs/SECURITY_MODEL.md).
+
 AETHER_02 is a **local, single-machine, stdio-only** MCP server. It does **not** open network ports, listen for incoming connections, or expose any remote API. Its entire attack surface is:
 
 1. **stdin** — MCP JSON-RPC messages from the AI client (local, same-machine, same-user)

@@ -1,15 +1,40 @@
+# Rust
 /target/
+**/*.rs.bk
+
+# Local configuration / secrets
 .env
+.env.*
+!**/.env.example
+
+# Logs and crash dumps
 *.log
-debug/
 *.core
+core
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.dylib
+*.rlib
+*.dll
+*.exe
+
+# Editor / IDE state
+.vscode/
+.idea/
 *.swp
 *.swo
 *~
-.vscode/
-.idea/
-*.o
-*.so
-*.dylib
-
 .cursorignore.index
+
+# Node / packaging scratch
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.tgz
+
+# Local debug output
+debug/

@@ -9,180 +9,114 @@
 [![Install in VS Code Insiders](https://img.shields.io/badge/Install_in-VS_Code_Insiders-24BFA5?style=for-the-badge&logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=aether-02&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40foursecondfivefour%2Faether-linux-mcp-server%22%5D%2C%22env%22%3A%7B%22RUST_LOG%22%3A%22info%22%7D%7D&quality=insiders)
 
 [![npm install](https://img.shields.io/badge/npm%20install-g%20aether--linux--mcp--server-CB3837?logo=npm&style=for-the-badge)](https://www.npmjs.com/package/@foursecondfivefour/aether-linux-mcp-server)
-[![Shell install](https://img.shields.io/badge/Shell-curl%20%7C%20bash-4EAA25?logo=gnubash&logoColor=white&style=for-the-badge)](https://raw.githubusercontent.com/foursecondfivefour/aether-linux-mcp-server/main/install.sh)
+[![Shell install](https://img.shields.io/badge/Shell-curl%20%7C%20bash-4EAA25?logo=gnubash&logoColor=white&style=for-the-badge)](https://raw.githubusercontent.com/foursecondfivefour/aether-linux-mcp-server/main/scripts/install/install.sh)
 
-**12 tools. 99.9% Linux coverage. Zero compromises.**
+**12 tools. 3 prompts. 20 resources. 99.9% Linux coverage. stdio-only.**
 
-AETHER_02 is an MCP (Model Context Protocol) server written in Rust that gives AI assistants full control over Linux via standard input/output. From process management to GUI automation, from kernel security audit to hardware control — everything a system administrator needs.
+AETHER_02 is a Rust MCP server that lets AI assistants operate a local Linux system through the Model Context Protocol. It covers process management, filesystem operations, package managers, system configuration, services, GUI automation, system info, networking, users, security, hardware control, and automation.
 
-**Separate repository from [AETHER_01](https://github.com/foursecondfivefour/aether-mcp-server) (Windows).** Same philosophy, different OS.
-
----
-
-## Tool Coverage
-
-| # | Tool | Actions |
-|---|------|---------|
-| 1 | process_control | list, tree, kill, signal, create, set_priority, set_nice, query_info, threads, set_affinity, memory_info, memory_limits, fd_list, fd_info, limits, environ, suspend, resume, cgroup_list, cgroup_info, cgroup_create, cgroup_delete, cgroup_set_limit, cgroup_move, namespace_list, namespace_enter*, oom_score, oom_kill, seccomp_info, ptrace_attach*, ptrace_detach*, container_list, container_info, container_start, container_stop, container_logs, container_exec, perf_top, perf_stat |
-| 2 | file_system | read, write, append, delete, copy, move, rename, list_dir, stat, statvfs, mkdir, exists, acl_get, acl_set, xattr_list, xattr_get, xattr_set, xattr_delete, symlink_read, symlink_create, symlink_delete, chmod, chown, truncate, mount_list, mount, umount, remount, bind_mount, tmpfs_mount, disk_list, disk_info, part_list, part_create*, part_delete*, part_resize*, mdraid_list, mdraid_info, mdraid_create*, lvm_pvs, lvm_vgs, lvm_lvs, lvm_create*, swap_list, swap_on, swap_off, swap_create*, fsck_check*, fsck_repair*, nfs_list, nfs_mount, inotify_watch, inotify_read, btrfs_subvol_list, btrfs_snapshot, zfs_list, zfs_snapshot, overlay_mount |
-| 3 | package_manager | list_installed, list_upgradable, search, info, install*, remove*, upgrade*, upgrade_all*, hold, unhold, list_repos, add_repo*, remove_repo*, clean_cache, history, verify, download, flatpak_list, flatpak_install*, flatpak_remove*, snap_list, snap_install*, snap_remove*, appimage_list, nix_list, nix_install*, nix_remove* |
-| 4 | system_config | sysctl_list, sysctl_get, sysctl_set*, sysctl_load*, kernel_cmdline_get, kernel_cmdline_set*, modprobe_list, modprobe_load*, modprobe_unload*, modprobe_blacklist, dracut_rebuild*, dconf_list, dconf_get, dconf_set, gsettings_list, gsettings_get, gsettings_set, limits_get, limits_set*, hostname_get, hostname_set*, timezone_list, timezone_get, timezone_set*, locale_list, locale_get, locale_set*, keyboard_layout, etc_config_read, etc_config_write*, udev_info, udev_rules_list, udev_trigger, environment_list, environment_set*, os_release |
-| 5 | service_manager | list, list_units, list_unit_files, status, start*, stop*, restart*, reload, enable*, disable*, mask, unmask, cat, edit*, show, list_dependencies, list_timers, list_sockets, list_paths, list_mounts, isolate*, default, rescue*, emergency*, daemon_reload, reset_failed, user_services, analyze + OpenRC + runit + s6 |
-| 6 | gui_automation | mouse_move, mouse_click, mouse_scroll, mouse_position, mouse_drag, keyboard_type, keyboard_press, keyboard_combo, keyboard_state, find_window, list_windows, set_window_pos, set_window_size, focus_window, get_window_rect, get_window_title, get_window_class, close_window, minimize_window, maximize_window, screenshot, screenshot_window, clipboard_read, clipboard_write, clipboard_clear, display_list, display_info, display_mode_set, display_scale, display_rotation, display_brightness_get, display_brightness_set, display_night_light, display_color_profile, compositor_info, audio_list_sinks, audio_list_sources, audio_volume_get, audio_volume_set, audio_mute, audio_default_sink, input_list_devices, input_device_info, input_remap*, notification_send, notification_history, screensaver_lock, screensaver_unlock, inhibit_idle |
-| 7 | system_info | cpu_info, cpu_topology, cpu_freq, cpu_governor, cpu_vulnerabilities, cpu_microcode, cpu_cache, cpu_perf_flags, memory_info, memory_topology, memory_hugepages, memory_numa, memory_slab, disk_list, disk_info, disk_smart, disk_iostat, disk_partitions, os_info, os_release, kernel_info, kernel_modules, kernel_tainted, uptime, load_avg, env_vars, hostname, boot_time, gpu_list, gpu_info, gpu_usage, gpu_temperature, gpu_driver, pci_list, pci_info, usb_list, usb_info, dmi_bios, dmi_system, dmi_board, dmi_chassis, acpi_tables, acpi_power, edid_info, iommu_groups, irq_list, irq_affinity, sensors_list, sensors_temperature, sensors_fan, sensors_voltage, device_list, driver_list, firmware_list |
-| 8 | network_manager | adapter_list, adapter_info, adapter_up*, adapter_down*, adapter_stats, adapter_speed, address_list, address_add*, address_delete*, route_list, route_add*, route_delete*, connection_list, connection_info, connection_create*, connection_modify*, connection_delete*, connection_up*, connection_down*, dns_servers, dns_cache, dns_flush, dns_set*, firewall_rules_list, firewall_rule_add*, firewall_rule_delete*, firewall_chain_list, nftables_table_list, nftables_chain_list, nftables_rule_add*, nftables_rule_delete*, wireguard_list, wireguard_info, wireguard_config*, bridge_list, bridge_create*, bridge_add_port*, bond_list, bond_create*, vlan_list, vlan_create*, network_namespace_list, network_namespace_create*, tc_qdisc_list, tc_qdisc_add*, socket_list, socket_info, wifi_list, wifi_connect*, wifi_disconnect, wifi_scan, bluetooth_list, bluetooth_info, bluetooth_connect*, bluetooth_pair*, proxy_list, proxy_set, hosts_read, hosts_write* |
-| 9 | user_management | users_list, user_info, user_create*, user_delete*, user_modify*, user_password_set*, user_lock, user_unlock, groups_list, group_info, group_create*, group_delete*, group_add_user*, group_remove_user*, sessions_list, session_info, session_terminate*, current_user, whoami, id, nsswitch_conf, pam_list_modules, pam_conf_read, pam_conf_write*, polkit_list, polkit_info, sudoers_read, sudoers_write*, sudoers_list_users, ssh_authorized_keys_list, ssh_authorized_keys_add*, ssh_authorized_keys_remove*, faillock_list, faillock_reset, subuid_list, subgid_list, acl_users, last_logins, loginctl_list, loginctl_user_status |
-| 10 | security_audit | selinux_status, selinux_mode, selinux_set_mode*, selinux_booleans, selinux_policy, selinux_context_list, selinux_set_context*, apparmor_status, apparmor_profiles, apparmor_set_mode*, auditd_status, auditd_rules_list, auditd_rule_add*, auditd_rule_delete*, firewall_status, firewall_profile, tpm2_info, tpm2_pcrs, tpm2_quote, secure_boot_status, ima_status, ima_policy, evm_status, fapolicyd_status, lockdown_status, kernel_lsms, kernel_mitigations, kernel_hardening, aslr_status, mmap_min_addr, kptr_restrict, dmesg_restrict, ptrace_scope, core_pattern, file_integrity_list, file_integrity_check, aide_check, lynis_check, cve_mitigations, uefi_variables, boot_chain |
-| 11 | hardware_control | gpu_nvidia_info, gpu_nvidia_smi, gpu_nvidia_power, gpu_nvidia_fan, gpu_amdgpu_info, gpu_intel_info, gpu_vulkan_info, pci_rescan*, pci_remove*, usb_devices, usb_authorize*, usb_deauthorize*, acpi_info, acpi_wakeup, acpi_event, cpufreq_governor_list, cpufreq_governor_get, cpufreq_governor_set*, thermal_zones, thermal_temperature, thermal_cooling, cpu_microcode_version, cpu_microcode_reload*, iommu_groups, iommu_info, irq_list, irq_set_affinity*, hugepages_info, hugepages_alloc*, kdump_status, kdump_config, kdump_test*, memory_error_count |
-| 12 | system_automation | journal_list, journal_query, journal_follow, journal_boot, journal_vacuum, journal_disk_usage, timer_list, timer_info, timer_enable*, timer_disable*, timer_create*, timer_delete*, cron_list, cron_user_list, cron_add*, cron_remove*, anacron_list, at_list, at_create*, at_delete*, tmpfiles_list, tmpfiles_create, tmpfiles_clean, sysusers_list, sysusers_create*, binfmt_list, binfmt_register*, modules_load_list, modules_load_add*, sysctl_d_list, sysctl_d_apply, boot_analyze, boot_chart |
-
-`*` = requires `force: true` or feature gate enabled in `.env`
+AETHER_02 is the Linux counterpart to [AETHER_01 for Windows](https://github.com/foursecondfivefour/aether-mcp-server).
 
 ---
 
-## Installation
+## Quick install
 
-AETHER_02 provides multiple installation methods — pick the one that works best for you.
-
-### Method 1: npm global install (easiest)
+### npm
 
 ```bash
 npm install -g @foursecondfivefour/aether-linux-mcp-server
 ```
 
-The postinstall script downloads the latest Linux binary from GitHub Releases into the package `bin/` directory, so `aether-mcp-server` is available on your PATH.
-
-### Method 2: One-click shell install
+### Shell installer
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/foursecondfivefour/aether-linux-mcp-server/main/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/foursecondfivefour/aether-linux-mcp-server/main/scripts/install/install.sh | bash
 ```
 
-The script:
-1. Downloads the latest binary
-2. Creates `.env` with safe defaults
-3. Registers in Cursor, Claude Desktop, Windsurf, VS Code
-
-### Method 3: One-click editor integration
-
-Click the badge for your editor:
-
-| Editor | Install |
-|--------|---------|
-| **Cursor** | [![Add AETHER_02 MCP server to Cursor](https://cursor.com/deeplink/mcp-install-dark.png)](cursor://anysphere.cursor-deeplink/mcp/install?name=aether-02&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBmb3Vyc2Vjb25kZml2ZWZvdXIvYWV0aGVyLWxpbnV4LW1jcC1zZXJ2ZXIiXSwiZW52Ijp7IlJVU1RfTE9HIjoiaW5mbyJ9fQ==) |
-| **VS Code** | [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-007ACC?logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=aether-02&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40foursecondfivefour%2Faether-linux-mcp-server%22%5D%2C%22env%22%3A%7B%22RUST_LOG%22%3A%22info%22%7D%7D) |
-| **VS Code Insiders** | [![Install in VS Code Insiders](https://img.shields.io/badge/Install_in-VS_Code_Insiders-24BFA5?logo=visualstudiocode&logoColor=white)](https://insiders.vscode.dev/redirect/mcp/install?name=aether-02&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40foursecondfivefour%2Faether-linux-mcp-server%22%5D%2C%22env%22%3A%7B%22RUST_LOG%22%3A%22info%22%7D%7D&quality=insiders) |
-
-If your browser/GitHub client does not open the Cursor deeplink, copy this link into the address bar:
-
-```text
-cursor://anysphere.cursor-deeplink/mcp/install?name=aether-02&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBmb3Vyc2Vjb25kZml2ZWZvdXIvYWV0aGVyLWxpbnV4LW1jcC1zZXJ2ZXIiXSwiZW52Ijp7IlJVU1RfTE9HIjoiaW5mbyJ9fQ==
-```
-
-### Method 4: Build from source
+### Build from source
 
 ```bash
 git clone https://github.com/foursecondfivefour/aether-linux-mcp-server
 cd aether-linux-mcp-server
-cp .env.example .env
+cp config/env/.env.example .env
 cargo build --release
-./install.sh target/release/aether-mcp-server
+./scripts/install/install.sh target/release/aether-mcp-server
 ```
 
-### Manual configuration (without install script)
-
-**Cursor** — `~/.cursor/mcp.json`:
-```json
-{
-  "mcpServers": {
-    "aether-02": {
-      "command": "/path/to/aether-mcp-server",
-      "env": { "RUST_LOG": "info" }
-    }
-  }
-}
-```
-
-For VS Code/Claude Desktop/Windsurf, add the same `aether-02` server entry to the client's MCP configuration file.
+More install/client details: [docs/INSTALL.md](docs/INSTALL.md), [docs/MCP_CLIENTS.md](docs/MCP_CLIENTS.md).
 
 ---
 
-## Feature Gates
+## Tool overview
 
-| Gate | Env Var | Description |
-|------|---------|-------------|
-| Kexec | `AETHER_KEXEC_LOAD=0` | Load new kernel via kexec |
-| Module Load | `AETHER_MODULE_LOAD=0` | Load/unload kernel modules |
-| BPF Load | `AETHER_BPF_LOAD=0` | Load BPF programs |
-| Ptrace | `AETHER_PTRACE_ATTACH=0` | ptrace attach to non-child |
-| Namespace Create | `AETHER_NAMESPACE_CREATE=0` | Creating new namespaces |
-| Offline Mount | `AETHER_OFFLINE_MOUNT=0` | Mount from raw block devices |
-| Partition Edit | `AETHER_PARTITION_EDIT=0` | Create/delete/resize partitions |
-| Token Manipulation | `AETHER_TOKEN_MANIPULATION=0` | Capability setuid/setgid changes |
+| # | Tool | Scope |
+|---|------|-------|
+| 1 | `process_control` | Processes, signals, priorities, cgroups, namespaces, containers, perf |
+| 2 | `file_system` | Files, ACL/xattr, symlinks, mounts, disks, LVM, swap, fsck, NFS, btrfs, ZFS |
+| 3 | `package_manager` | apt, dnf, pacman, zypper, flatpak, snap, AppImage, nix |
+| 4 | `system_config` | sysctl, kernel cmdline, modprobe, hostname, timezone, locale, udev, dconf |
+| 5 | `service_manager` | systemd, OpenRC, runit, s6 |
+| 6 | `gui_automation` | X11/Wayland, mouse, keyboard, windows, screenshots, clipboard, display, audio |
+| 7 | `system_info` | CPU, memory, disk, kernel, GPU, PCI, USB, DMI, ACPI, IOMMU, sensors |
+| 8 | `network_manager` | iproute2, nftables, NetworkManager, WireGuard, bridges, WiFi, Bluetooth |
+| 9 | `user_management` | users, groups, sessions, PAM, polkit, sudoers, SSH keys |
+| 10 | `security_audit` | SELinux, AppArmor, auditd, firewall, TPM2, Secure Boot, IMA/EVM, hardening |
+| 11 | `hardware_control` | GPU, PCI, USB authorization, ACPI, cpufreq, thermal, IOMMU, kdump |
+| 12 | `system_automation` | journald, timers, cron/anacron, at, tmpfiles, sysusers, boot analysis |
 
----
-
-## Security
-
-AETHER_02 follows the same security model as AETHER_01:
-- **stdio-only** — no network, no HTTP, no TCP
-- **No shell injection** — direct syscalls via nix/libc, CLI args as Vec<String>
-- **force: true** — destructive operations require explicit confirmation
-- **Feature gates** — 8 dangerous capabilities disabled by default
-- **Audit log to stderr** — every invocation logged
-- **Path canonicalization**
-- **Compiler hardening**: PIE, Full RELRO, NX stack, stack protector, CET/BTI
+Full action list: [docs/TOOLS.md](docs/TOOLS.md).
 
 ---
 
-## Performance
+## Safety model
 
-- `opt-level = 3` (all LLVM optimizations)
-- `lto = true` (fat LTO)
-- `codegen-units = 1` (full DCE)
-- `panic = "abort"` (no unwind)
-- `strip = "symbols"` (minimal binary)
-- `target-cpu = native` (AVX2, BMI2, FMA, POPCNT)
+AETHER_02 is an administrative tool. It is intentionally powerful, so risky actions are guarded:
+
+- **stdio-only** — no HTTP server and no listening TCP port.
+- **stdout stays JSON-RPC only** — logs and audit output go to stderr.
+- **No shell interpolation** — use syscalls or explicit argv vectors.
+- **`force: true`** required for destructive operations.
+- **Feature gates** in `.env` protect critically dangerous capabilities.
+- **Audit logging** records tool invocations.
+
+Feature gates and hardening details: [docs/SECURITY_MODEL.md](docs/SECURITY_MODEL.md).
 
 ---
 
-## Project Structure
+## Repository map
 
-```
+```text
 .
-├── .agents/skills/aether-linux-mcp/SKILL.md  # Agent skill metadata
-├── .cursor/rules/aether-mcp.mdc              # Cursor project rules
-├── .github/                                  # Issues, PR template, Copilot instructions
-├── src/
-│   ├── main.rs              # tokio::main, stdio transport
-│   ├── lib.rs               # Module declarations
-│   ├── server.rs            # AetherServer + 12 tool router
-│   ├── config.rs            # FeatureGates from .env
-│   ├── error.rs             # AetherError + POSIX errno mapping
-│   ├── audit.rs             # Structured audit logging
-│   └── tools/
-│       ├── process.rs       # Tool 1 — process_control
-│       ├── filesystem.rs    # Tool 2 — file_system
-│       ├── packages.rs      # Tool 3 — package_manager
-│       ├── sysconfig.rs     # Tool 4 — system_config
-│       ├── service.rs       # Tool 5 — service_manager
-│       ├── gui.rs           # Tool 6 — gui_automation
-│       ├── sysinfo.rs       # Tool 7 — system_info
-│       ├── network.rs       # Tool 8 — network_manager
-│       ├── user.rs          # Tool 9 — user_management
-│       ├── security.rs      # Tool 10 — security_audit
-│       ├── hardware.rs      # Tool 11 — hardware_control
-│       └── automation.rs    # Tool 12 — system_automation
-├── tests/                   # Config/error/tool-dispatch smoke tests
-├── install.js               # npm postinstall binary downloader
-├── install.sh               # Linux one-click installer and MCP registration
-├── package.json             # npm package metadata
-├── rustfmt.toml             # Formatter settings
-└── clippy.toml              # Lint settings
+├── docs/                 # Detailed docs split by topic
+├── scripts/              # Install and smoke-test helper scripts
+├── config/               # Runtime/config examples
+├── integrations/         # Marketplace/client metadata
+├── src/                  # Rust MCP server implementation
+│   └── tools/            # 12 Linux tool groups
+├── tests/                # Config, error, dispatch, and smoke tests
+├── .agents/              # Agent instructions and skill metadata
+├── .cursor/              # Cursor project rules
+├── .github/              # Issues, PR template, community docs
+├── Cargo.toml            # Rust crate metadata
+└── package.json          # npm package metadata
 ```
+
+Detailed map: [docs/PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md).
+
+---
+
+## Development
+
+```bash
+cargo fmt --check
+cargo clippy -- -D warnings
+cargo test
+```
+
+More: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md), [docs/RELEASE.md](docs/RELEASE.md).
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT — see [LICENSE](LICENSE).

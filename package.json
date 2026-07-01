@@ -21,14 +21,15 @@
     "aether-mcp-server": "bin/aether-mcp-server"
   },
   "files": [
-    "install.js",
-    "install.sh",
+    "scripts/install/install.js",
+    "scripts/install/install.sh",
     "bin/",
     "README.md",
+    "docs/",
     "LICENSE"
   ],
   "scripts": {
-    "postinstall": "node install.js"
+    "postinstall": "node scripts/install/install.js"
   },
   "engines": {
     "node": ">=18"

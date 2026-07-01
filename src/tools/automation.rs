@@ -5,11 +5,12 @@ use std::fs;
 use std::process::Command;
 
 fn run(cmd: &str, args: &[&str]) -> String {
-    Command::new(cmd).args(args).output()
+    Command::new(cmd)
+        .args(args)
+        .output()
         .map(|o| format!("{}{}", String::from_utf8_lossy(&o.stdout), String::from_utf8_lossy(&o.stderr)))
         .unwrap_or_else(|_| format!("'{}' not available", cmd))
 }
-
 
 pub fn handle(_gates: &FeatureGates, action: &str, _params: serde_json::Value) -> String {
     let ctx = ErrorContext::new("system_automation", action);

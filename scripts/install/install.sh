@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # AETHER_02 — Linux MCP Server Installer
 # Auto-detects Cursor, Claude Desktop, Windsurf, VS Code and registers the MCP server.
-# Usage: curl -sSL https://raw.githubusercontent.com/foursecondfivefour/aether-linux-mcp-server/main/install.sh | bash
+# Usage: curl -sSL https://raw.githubusercontent.com/foursecondfivefour/aether-linux-mcp-server/main/scripts/install/install.sh | bash
 
 set -euo pipefail
 

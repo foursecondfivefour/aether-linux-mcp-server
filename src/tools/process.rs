@@ -13,26 +13,18 @@ pub async fn handle(gates: &FeatureGates, action: &str, params: serde_json::Valu
     let r: Result<String, AetherError> = match action {
         "list" => Ok(helpers::cmd("ps", &["aux"])),
         "tree" => Ok(helpers::cmd("ps", &["aux", "--forest"])),
-        "kill" => signal(&params, &ctx, Signal::SIGKILL)
-            .map(|_| "Process killed".to_string()),
+        "kill" => signal(&params, &ctx, Signal::SIGKILL).map(|_| "Process killed".to_string()),
         "signal" => {
             let sig_str = helpers::p(&params, "signal");
             let sig_val: i32 = sig_str.parse().unwrap_or(15);
             match Signal::try_from(sig_val) {
                 Ok(sig) => signal(&params, &ctx, sig).map(|_| "Signal sent".to_string()),
-                Err(e) => Err(AetherError::invalid_param(
-                    ctx.clone(),
-                    "signal",
-                    &format!("{}", e),
-                )),
+                Err(e) => Err(AetherError::invalid_param(ctx.clone(), "signal", format!("{}", e))),
             }
         }
-        "suspend" => signal(&params, &ctx, Signal::SIGSTOP)
-            .map(|_| "Process suspended".to_string()),
-        "resume" => signal(&params, &ctx, Signal::SIGCONT)
-            .map(|_| "Process resumed".to_string()),
-        "create" => create(&params, &ctx)
-            .map(|pid_val| format!("Process created: PID {}", pid_val)),
+        "suspend" => signal(&params, &ctx, Signal::SIGSTOP).map(|_| "Process suspended".to_string()),
+        "resume" => signal(&params, &ctx, Signal::SIGCONT).map(|_| "Process resumed".to_string()),
+        "create" => create(&params, &ctx).map(|pid_val| format!("Process created: PID {}", pid_val)),
         "set_priority" => (|| -> Result<String, AetherError> {
             let pid_val = pid(&params)?;
             let prio_str = helpers::p(&params, "priority");
@@ -81,15 +73,13 @@ pub async fn handle(gates: &FeatureGates, action: &str, params: serde_json::Valu
 fn pid(params: &serde_json::Value) -> Result<u32, AetherError> {
     let ctx = ErrorContext::new("process_control", "pid");
     let s = helpers::p(params, "pid");
-    s.parse::<u32>()
-        .map_err(|_| AetherError::invalid_param(ctx, "pid", "invalid PID"))
+    s.parse::<u32>().map_err(|_| AetherError::invalid_param(ctx, "pid", "invalid PID"))
 }
 
 fn signal(params: &serde_json::Value, ctx: &ErrorContext, sig: Signal) -> Result<(), AetherError> {
     let pid_val = pid(params)?;
-    kill(Pid::from_raw(pid_val as i32), sig).map_err(|e| {
-        AetherError::system_error(ctx.clone(), format!("signal failed: {}", e))
-    })
+    kill(Pid::from_raw(pid_val as i32), sig)
+        .map_err(|e| AetherError::system_error(ctx.clone(), format!("signal failed: {}", e)))
 }
 
 fn create(params: &serde_json::Value, ctx: &ErrorContext) -> Result<u32, AetherError> {
@@ -107,19 +97,14 @@ fn create(params: &serde_json::Value, ctx: &ErrorContext) -> Result<u32, AetherE
             }
         }
     }
-    let child = cmd
-        .spawn()
-        .map_err(|e| AetherError::system_error(ctx.clone(), format!("spawn failed: {}", e)))?;
+    let child = cmd.spawn().map_err(|e| AetherError::system_error(ctx.clone(), format!("spawn failed: {}", e)))?;
     Ok(child.id())
 }
 
 fn set_priority_impl(pid_val: u32, prio: i32, ctx: &ErrorContext) -> Result<(), AetherError> {
     let ret = unsafe { libc::setpriority(libc::PRIO_PROCESS, pid_val, prio) };
     if ret != 0 {
-        Err(AetherError::system_error(
-            ctx.clone(),
-            "setpriority failed",
-        ))
+        Err(AetherError::system_error(ctx.clone(), "setpriority failed"))
     } else {
         Ok(())
     }

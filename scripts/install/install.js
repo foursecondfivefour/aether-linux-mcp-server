@@ -15,7 +15,8 @@ const path = require("path");
 const REPO = "foursecondfivefour/aether-linux-mcp-server";
 const VERSION = process.env.AETHER_RELEASE_TAG || "latest";
 const BINARY = "aether-mcp-server";
-const BIN_DIR = path.join(__dirname, "bin");
+const ROOT_DIR = path.resolve(__dirname, "..", "..");
+const BIN_DIR = path.join(ROOT_DIR, "bin");
 const BIN_PATH = path.join(BIN_DIR, BINARY);
 const MIN_SIZE = 10240; // 10 KB — catch obviously failed downloads
 
@@ -83,7 +84,7 @@ async function main() {
   if (process.platform !== "linux") {
     console.error(`[aether-linux-mcp-server] This package is for Linux only (detected: ${process.platform})`);
     console.error(`[aether-linux-mcp-server] Use the Linux installer on a Linux machine:`);
-    console.error(`[aether-linux-mcp-server]   curl -sSL https://raw.githubusercontent.com/${REPO}/main/install.sh | bash`);
+    console.error(`[aether-linux-mcp-server]   curl -sSL https://raw.githubusercontent.com/${REPO}/main/scripts/install/install.sh | bash`);
     process.exit(1);
   }
 
