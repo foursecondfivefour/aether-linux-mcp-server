@@ -17,7 +17,7 @@ alwaysApply: true
 
 ```bash
 cargo check    # verify
-cargo build    # binary → target/debug/aether-linux-mcp-server
+cargo build    # binary → target/debug/aether-mcp-server
 cargo test
 ```
 

@@ -23,13 +23,15 @@ Keep these versions in sync when releasing:
 
 ## Binary asset
 
-GitHub Releases should provide:
+GitHub Releases should provide these assets:
 
 ```text
 aether-mcp-server
+aether-mcp-server-linux-x86_64.tar.gz
+SHA256SUMS
 ```
 
-The npm `install.js` downloads this asset from:
+The npm `install.js` downloads the raw binary asset from:
 
 ```text
 https://github.com/foursecondfivefour/aether-linux-mcp-server/releases/latest/download/aether-mcp-server

@@ -46,7 +46,7 @@ Then run:
 python3 scripts/smoke_stdio.py
 ```
 
-The script sends newline-delimited JSON-RPC messages to `target/debug/aether-linux-mcp-server`. The server should respond to:
+The script sends newline-delimited JSON-RPC messages to `target/debug/aether-mcp-server`. The server should respond to:
 
 - `initialize`
 - `tools/list`

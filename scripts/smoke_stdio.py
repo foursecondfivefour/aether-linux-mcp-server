@@ -18,8 +18,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_BIN = ROOT / "target" / "debug" / "aether-linux-mcp-server"
-BIN = Path(os.environ.get("AETHER_BIN", DEFAULT_BIN))
+DEFAULT_BIN = ROOT / "target" / "debug" / "aether-mcp-server"
+LEGACY_BIN = ROOT / "target" / "debug" / "aether-linux-mcp-server"
+BIN = Path(os.environ.get("AETHER_BIN", DEFAULT_BIN if DEFAULT_BIN.exists() else LEGACY_BIN))
 
 
 def send(proc: subprocess.Popen[str], obj: dict) -> None:

@@ -4,6 +4,10 @@ version = "1.0.1"
 edition = "2021"
 description = "AETHER_02 — Full-spectrum Linux MCP Server with 99.9% system management coverage"
 
+[[bin]]
+name = "aether-mcp-server"
+path = "src/main.rs"
+
 [dependencies]
 rmcp = "0.5"
 tokio = { version = "1", features = ["full"] }
