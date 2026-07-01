@@ -1,12 +1,31 @@
 # Release Checklist
 
-## Before tagging
+## Automated GitHub release
+
+Use **Actions → Release → Run workflow**.
+
+Inputs:
+
+- `version` — optional. Empty means read `Cargo.toml` and release `v<version>`.
+- `prerelease` — optional GitHub prerelease flag.
+
+The workflow:
+
+1. Creates/pushes the tag when launched manually.
+2. Runs `cargo fmt --check`, `cargo clippy -- -D warnings`, and `cargo test`.
+3. Builds `target/release/aether-mcp-server` with `cargo build --release -j 1`.
+4. Uploads release assets.
+5. Creates a GitHub Release with GitHub-generated release notes (`--generate-notes`).
+
+Pushing a `v*` tag also runs the same release workflow.
+
+## Before tagging manually
 
 ```bash
 cargo fmt --check
 cargo clippy -- -D warnings
 cargo test
-cargo build --release
+cargo build --release -j 1
 node --check scripts/install/install.js
 python3 -m json.tool package.json >/dev/null
 python3 -m json.tool integrations/lobehub/lhm.plugin.json >/dev/null
