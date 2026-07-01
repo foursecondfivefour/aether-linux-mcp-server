@@ -31,12 +31,18 @@ const ALLOWED_COMMANDS: &[&str] = &[
     "atq",
     "auditctl",
     "bluetoothctl",
+    "chmod",
+    "chown",
+    "cpupower",
     "crontab",
     "dconf",
+    "df",
     "dmidecode",
+    "dnf",
     "dpkg",
     "env",
     "fdisk",
+    "findmnt",
     "flatpak",
     "free",
     "getenforce",
@@ -59,12 +65,15 @@ const ALLOWED_COMMANDS: &[&str] = &[
     "lsusb",
     "lvs",
     "modprobe",
+    "ln",
     "mokutil",
     "mount",
     "nft",
+    "nix",
     "nmcli",
     "nvidia-smi",
     "pactl",
+    "pacman",
     "parted",
     "passwd",
     "ps",
@@ -72,6 +81,7 @@ const ALLOWED_COMMANDS: &[&str] = &[
     "renice",
     "resolvectl",
     "rocm-smi",
+    "rpm",
     "sensors",
     "sestatus",
     "snap",
@@ -81,6 +91,7 @@ const ALLOWED_COMMANDS: &[&str] = &[
     "systemd-analyze",
     "sysctl",
     "timedatectl",
+    "truncate",
     "ufw",
     "umount",
     "uname",
@@ -94,11 +105,19 @@ const ALLOWED_COMMANDS: &[&str] = &[
     "xdotool",
     "xrandr",
     "zfs",
+    "zypper",
 ];
 
 #[must_use]
 pub fn is_allowed_command(cmd: &str) -> bool {
     ALLOWED_COMMANDS.contains(&cmd)
+}
+
+#[must_use]
+pub fn command_exists(cmd: &str) -> bool {
+    std::env::var_os("PATH")
+        .map(|paths| std::env::split_paths(&paths).any(|dir| dir.join(cmd).is_file()))
+        .unwrap_or(false)
 }
 
 #[must_use]
