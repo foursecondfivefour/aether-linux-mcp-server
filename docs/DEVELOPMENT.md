@@ -32,6 +32,25 @@ python3 -m json.tool package.json >/dev/null
 python3 -m json.tool integrations/lobehub/lhm.plugin.json >/dev/null
 ```
 
+## Mock and dry-run testing
+
+Command-backed handlers respect two safety mechanisms:
+
+- `"dry_run": true` in MCP params returns a command/action preview without mutating the host.
+- `AETHER_MOCK_COMMANDS=1` makes command-backed handlers return `MOCK: ...` instead of executing binaries. This is used by `tests/mock_action_tests.rs`.
+
+Example:
+
+```json
+{
+  "action": "install",
+  "params": {
+    "package": "curl",
+    "dry_run": true
+  }
+}
+```
+
 ## MCP smoke test
 
 Build first:

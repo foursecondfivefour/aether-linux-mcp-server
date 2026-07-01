@@ -1,14 +1,9 @@
 use crate::audit;
-use crate::error::{self, require_force, AetherError, ErrorContext};
+use crate::error::{self, AetherError, ErrorContext};
 use std::fs;
-use std::process::Command;
 
-fn run(cmd: &str, args: &[&str]) -> String {
-    Command::new(cmd)
-        .args(args)
-        .output()
-        .map(|o| format!("{}{}", String::from_utf8_lossy(&o.stdout), String::from_utf8_lossy(&o.stderr)))
-        .unwrap_or_else(|_| format!("'{}' not available", cmd))
+fn run(params: &serde_json::Value, cmd: &str, args: &[&str]) -> String {
+    crate::tools::helpers::cmd_params(params, cmd, args)
 }
 
 fn ps(params: &serde_json::Value, key: &str, ctx: &ErrorContext) -> String {
@@ -16,29 +11,28 @@ fn ps(params: &serde_json::Value, key: &str, ctx: &ErrorContext) -> String {
 }
 
 fn force_check(params: &serde_json::Value, ctx: &ErrorContext) -> Result<(), AetherError> {
-    if !require_force(params) {
-        Err(AetherError::ForceRequired { ctx: ctx.clone() })
-    } else {
-        Ok(())
-    }
+    crate::tools::helpers::require_force_or_dry_run(params, ctx)
 }
 
 pub fn handle(action: &str, params: serde_json::Value) -> String {
     let ctx = ErrorContext::new("package_manager", action);
-    let result = match action {
-        "list_installed" => Ok(run("dpkg", &["-l"])),
-        "list_upgradable" => Ok(run("apt", &["list", "--upgradable"])),
-        "search" => Ok(run("apt-cache", &["search", &ps(&params, "package", &ctx)])),
-        "info" => Ok(run("apt-cache", &["show", &ps(&params, "package", &ctx)])),
-        "install" => force_check(&params, &ctx).map(|_| run("apt", &["install", "-y", &ps(&params, "package", &ctx)])),
-        "remove" => force_check(&params, &ctx).map(|_| run("apt", &["remove", "-y", &ps(&params, "package", &ctx)])),
-        "upgrade_all" => force_check(&params, &ctx).map(|_| run("apt", &["upgrade", "-y"])),
-        "clean_cache" => Ok(run("apt", &["clean"])),
-        "history" => Ok(fs::read_to_string("/var/log/apt/history.log").unwrap_or_default()),
-        "flatpak_list" => Ok(run("flatpak", &["list"])),
-        "snap_list" => Ok(run("snap", &["list"])),
-        other => Err(AetherError::not_implemented(ctx.clone(), other)),
-    };
+    let result =
+        match action {
+            "list_installed" => Ok(run(&params, "dpkg", &["-l"])),
+            "list_upgradable" => Ok(run(&params, "apt", &["list", "--upgradable"])),
+            "search" => Ok(run(&params, "apt-cache", &["search", &ps(&params, "package", &ctx)])),
+            "info" => Ok(run(&params, "apt-cache", &["show", &ps(&params, "package", &ctx)])),
+            "install" => force_check(&params, &ctx)
+                .map(|_| run(&params, "apt", &["install", "-y", &ps(&params, "package", &ctx)])),
+            "remove" => force_check(&params, &ctx)
+                .map(|_| run(&params, "apt", &["remove", "-y", &ps(&params, "package", &ctx)])),
+            "upgrade_all" => force_check(&params, &ctx).map(|_| run(&params, "apt", &["upgrade", "-y"])),
+            "clean_cache" => force_check(&params, &ctx).map(|_| run(&params, "apt", &["clean"])),
+            "history" => Ok(fs::read_to_string("/var/log/apt/history.log").unwrap_or_default()),
+            "flatpak_list" => Ok(run(&params, "flatpak", &["list"])),
+            "snap_list" => Ok(run(&params, "snap", &["list"])),
+            other => Err(AetherError::not_implemented(ctx.clone(), other)),
+        };
     match &result {
         Ok(_) => audit::log_success("package_manager", action, "ok"),
         Err(e) => audit::log_failure("package_manager", action, &e.to_string()),

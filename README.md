@@ -75,7 +75,9 @@ AETHER_02 is an administrative tool. It is intentionally powerful, so risky acti
 - **stdio-only** — no HTTP server and no listening TCP port.
 - **stdout stays JSON-RPC only** — logs and audit output go to stderr.
 - **No shell interpolation** — use syscalls or explicit argv vectors.
+- **Command allowlist** blocks arbitrary command execution through command-backed handlers.
 - **`force: true`** required for destructive operations.
+- **`dry_run: true`** previews dangerous operations without mutating the host.
 - **Feature gates** in `.env` protect critically dangerous capabilities.
 - **Audit logging** records tool invocations.
 
